@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeFlow — Deposit Funds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0A0E1A;--surface:#111827;--surface2:#1C2333;--border:#1F2D40;--text:#F1F5F9;--muted:#64748B;--accent:#3B82F6;--accent-glow:rgba(59,130,246,0.15);--green:#10B981;--green-glow:rgba(16,185,129,0.15);--red:#EF4444;--red-glow:rgba(239,68,68,0.12);--radius:14px}
+    body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
+    .nav-logo{font-weight:700;font-size:20px;letter-spacing:-0.5px}
+    .nav-logo span{color:var(--accent)}
+    .nav-links{display:flex;gap:28px;font-size:14px}
+    .nav-links a{text-decoration:none;color:var(--muted);transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a.active{color:var(--text);font-weight:600}
+    .balance-chip{background:var(--surface2);border:1px solid var(--border);padding:8px 16px;border-radius:8px;font-size:13px}
+    .balance-chip span{color:var(--green);font-weight:700;font-family:'Space Mono',monospace}
+    .page{max-width:520px;margin:48px auto;padding:0 20px}
+    .wallet-card{background:linear-gradient(135deg,#1a2744 0%,#0f1729 100%);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:28px;position:relative;overflow:hidden}
+    .wallet-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);border-radius:50%}
+    .wallet-label{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+    .wallet-amount{font-family:'Space Mono',monospace;font-size:38px;font-weight:700;letter-spacing:-1px}
+    .wallet-amount span{font-size:20px;color:var(--muted);margin-right:4px}
+    .wallet-meta{display:flex;gap:24px;margin-top:16px}
+    .wallet-meta-item{font-size:12px;color:var(--muted)}
+    .wallet-meta-item strong{display:block;font-size:14px;font-weight:600;margin-top:2px}
+    .section-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+    .amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+    .amt-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--muted);transition:all .2s}
+    .amt-btn:hover{border-color:var(--accent);color:var(--text)}
+    .amt-btn.selected{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
+    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+    .form-group{margin-bottom:18px}
+    label{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+    input{width:100%;padding:13px 16px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+    input::placeholder{color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .test-cards{background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:20px;border:1px solid var(--border)}
+    .tc-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+    .tc-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text);margin-bottom:7px;transition:all .15s}
+    .tc-btn:last-child{margin-bottom:0}
+    .tc-btn:hover{border-color:var(--accent)}
+    .tc-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+    .tag{font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;letter-spacing:.5px}
+    .tag-ok{background:rgba(16,185,129,.15);color:var(--green)}
+    .tag-fail{background:var(--red-glow);color:var(--red)}
+    .deposit-btn{width:100%;padding:16px;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border:none;border-radius:10px;font-size:16px;font-family:'Space Grotesk',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+    .deposit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
+    .deposit-btn:disabled{background:#1F2D40;color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+    .result{margin-top:16px;padding:16px;border-radius:10px;display:none}
+    .result.show{display:block}
+    .result.success{background:var(--green-glow);border:1.5px solid rgba(16,185,129,.3)}
+    .result.failed{background:var(--red-glow);border:1.5px solid rgba(239,68,68,.3)}
+    .r-title{font-size:16px;font-weight:700;margin-bottom:4px}
+    .result.success .r-title{color:var(--green)}
+    .result.failed .r-title{color:var(--red)}
+    .r-sub{font-size:13px;color:var(--muted)}
+    .r-code{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px}
+    .error-feed{margin-top:24px;background:var(--surface);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius);padding:20px;display:none}
+    .error-feed.show{display:block}
+    .ef-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+    .ef-entry{font-family:'Space Mono',monospace;font-size:12px;color:var(--red);padding:6px 0;border-bottom:1px solid rgba(239,68,68,.1)}
+    .ef-entry:last-child{border-bottom:none}
+    .ef-count{margin-top:10px;font-size:12px;color:var(--red);font-weight:600}
+    .vbadge{position:fixed;bottom:20px;right:20px;padding:8px 14px;border-radius:8px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700}
+    .v-ok{background:var(--green-glow);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+    .v-broken{background:var(--red-glow);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Trade<span>Flow</span></div>
+  <div class="nav-links">
+    <a href="#">Dashboard</a>
+    <a href="#">Portfolio</a>
+    <a href="#">Markets</a>
+    <a href="#" class="active">Wallet</a>
+    <a href="#">History</a>
+  </div>
+  <div class="balance-chip">Balance: <span id="navBalance">$4,280.00</span></div>
+</nav>
+
+<div class="page">
+
+  <div class="wallet-card">
+    <div class="wallet-label">Available Balance</div>
+    <div class="wallet-amount"><span>$</span><span id="walletBalance">4,280.00</span></div>
+    <div class="wallet-meta">
+      <div class="wallet-meta-item">Invested<strong style="color:var(--accent)">$12,540.00</strong></div>
+      <div class="wallet-meta-item">Today's P&amp;L<strong style="color:var(--green)">+$320.45</strong></div>
+      <div class="wallet-meta-item">Account<strong>PRO</strong></div>
+    </div>
+  </div>
+
+  <div class="section-label">Quick Deposit</div>
+  <div class="amounts">
+    <button class="amt-btn" onclick="setAmt(100,this)">$100</button>
+    <button class="amt-btn" onclick="setAmt(500,this)">$500</button>
+    <button class="amt-btn selected" onclick="setAmt(1000,this)">$1,000</button>
+    <button class="amt-btn" onclick="setAmt(5000,this)">$5,000</button>
+  </div>
+
+  <div class="form-card">
+    <div class="section-label" style="margin-bottom:16px">Card Details</div>
+
+    <div class="test-cards">
+      <div class="tc-title">🧪 Demo Cards</div>
+      <button class="tc-btn" onclick="pick('4111111111111111')">
+        <span><strong>Visa</strong>&nbsp;<span class="tc-num">4111 1111 1111 1111</span></span>
+        <span class="tag tag-ok">✅ WORKS</span>
+      </button>
+      <button class="tc-btn" onclick="pick('5500005555555559')">
+        <span><strong>Mastercard</strong>&nbsp;<span class="tc-num">5500 0055 5555 5559</span></span>
+        <span class="tag tag-ok">✅ WORKS</span>
+      </button>
+      <button class="tc-btn" onclick="pick('378282246310005')">
+        <span><strong>Amex</strong>&nbsp;<span class="tc-num">3782 822463 10005</span></span>
+        <span class="tag" id="amex-tag">checking...</span>
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label>Cardholder Name</label>
+      <input id="name" value="Alex Morgan" placeholder="Full name on card">
+    </div>
+    <div class="form-group">
+      <label>Card Number</label>
+      <input id="card" placeholder="0000 0000 0000 0000" oninput="fmt(this)" maxlength="19">
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Expiry</label>
+        <input id="expiry" placeholder="MM/YY" maxlength="5" value="12/28" oninput="fmtExp(this)">
+      </div>
+      <div class="form-group">
+        <label>CVV</label>
+        <input id="cvv" placeholder="···" maxlength="4" value="1234">
+      </div>
+    </div>
+
+    <button class="deposit-btn" id="depositBtn" onclick="deposit()">
+      Deposit <span id="btnAmt">$1,000.00</span>
+    </button>
+
+    <div class="result" id="result">
+      <div class="r-title" id="r-title"></div>
+      <div class="r-sub" id="r-sub"></div>
+      <div class="r-code" id="r-code"></div>
+    </div>
+  </div>
+
+  <div class="error-feed" id="errorFeed">
+    <div class="ef-title">🔴 Live Error Feed — GCP Error Reporting</div>
+    <div id="efEntries"></div>
+    <div class="ef-count" id="efCount"></div>
+  </div>
+
+</div>
+
+<div class="vbadge" id="vbadge">checking...</div>
+
+<script>
+  const API='https://quality-guard-payment-857138853031.us-central1.run.app';
+  let amount=1000,errors=0;
+  function setAmt(v,btn){amount=v;document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');document.getElementById('btnAmt').textContent='$'+v.toLocaleString()+'.00'}
+  function fmt(el){let v=el.value.replace(/\D/g,'');el.value=v.match(/.{1,4}/g)?.join(' ')||v}
+  function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v}
+  function pick(num){document.getElementById('card').value=num.match(/.{1,4}/g)?.join(' ')||num;document.getElementById('result').className='result'}
+  async function checkVersion(){
+    try{
+      const r=await fetch(`${API}/api/version`);const d=await r.json();
+      const b=document.getElementById('vbadge'),t=document.getElementById('amex-tag');
+      if(d.broken){b.textContent=`⚠️ ${d.version} BROKEN`;b.className='vbadge v-broken';t.textContent='❌ FAILS';t.className='tag tag-fail'}
+      else{b.textContent=`✅ ${d.version}`;b.className='vbadge v-ok';t.textContent='✅ WORKS';t.className='tag tag-ok'}
+    }catch{document.getElementById('vbadge').textContent='⚠️ Offline';document.getElementById('vbadge').className='vbadge v-broken'}
+  }
+  async function deposit(){
+    const btn=document.getElementById('depositBtn');
+    const card=document.getElementById('card').value.replace(/\D/g,'');
+    const expiry=document.getElementById('expiry').value;
+    const cvv=document.getElementById('cvv').value;
+    if(!card){showResult('failed','⚠️ Enter card number','','');return}
+    btn.disabled=true;btn.textContent='Processing deposit...';
+    document.getElementById('result').className='result';
+    try{
+      const r=await fetch(`${API}/api/payments/charge`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({card_number:card,expiry,cvv,amount})});
+      const d=await r.json();
+      if(r.ok){
+        const cur=parseFloat(document.getElementById('walletBalance').textContent.replace(',',''));
+        const nb=(cur+amount).toLocaleString('en-US',{minimumFractionDigits:2});
+        document.getElementById('walletBalance').textContent=nb;
+        document.getElementById('navBalance').textContent='$'+nb;
+        showResult('success',`✅ $${amount.toLocaleString()}.00 Added to Wallet`,`${d.card_type?.toUpperCase()} · ${d.version}`,`txn: ${d.transaction_id}`)
+      }else{
+        const det=d.detail||{};
+        showResult('failed','❌ Deposit Failed — Card Declined',`${det.error}: ${det.message}`,`${det.version} · ${det.file}:${det.line}`);
+        addError(det)
+      }
+    }catch(e){showResult('failed','❌ Service Unavailable','Could not connect',e.message)}
+    btn.disabled=false;btn.innerHTML=`Deposit <span id="btnAmt">$${amount.toLocaleString()}.00</span>`
+  }
+  function showResult(type,title,sub,code){
+    document.getElementById('r-title').textContent=title;
+    document.getElementById('r-sub').textContent=sub;
+    document.getElementById('r-code').textContent=code;
+    document.getElementById('result').className=`result ${type} show`
+  }
+  function addError(det){
+    errors++;
+    document.getElementById('errorFeed').className='error-feed show';
+    const e=document.createElement('div');e.className='ef-entry';
+    e.textContent=`${new Date().toLocaleTimeString()} · PaymentValidationError · ${det.card_type} card · ${det.file}:${det.line}`;
+    const c=document.getElementById('efEntries');c.insertBefore(e,c.firstChild);
+    document.getElementById('efCount').textContent=`${errors} failed deposit${errors>1?'s':''} since last deploy`
+  }
+  checkVersion();setInterval(checkVersion,10000);
+</script>
+</body>
+</html>
