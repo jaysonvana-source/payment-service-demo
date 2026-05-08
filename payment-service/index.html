@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Quality Guard – AI-powered Autonomous Release Readiness Agent by Equiti. Continuous release readiness.">
+<meta property="og:title" content="Quality Guard – Continuous Release Readiness | Equiti">
+<meta property="og:description" content="From code complete to production with confidence. Meet Quality Guard.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hasnaaeddarif.github.io/payment-service-demo/preview.png">
+<meta property="og:url" content="https://hasnaaeddarif.github.io/payment-service-demo/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quality Guard – Continuous Release Readiness | Equiti">
+<meta name="twitter:description" content="From code complete to production with confidence. Meet Quality Guard.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300AFAB'/><text y='72' font-size='60' text-anchor='middle' x='50'>🛡️</text></svg>">
+<title>Quality Guard – Continuous Release Readiness | Equiti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#00AFAB;--teal-light:#33C1BD;--teal-pale:#99E5E1;
+  --teal-btn:#81D8D0;--teal-deep:#004A45;
+  --black:#0C111D;--black2:#101828;--black3:#182230;
+  --white:#FFFFFF;--muted:rgba(255,255,255,0.50);--dim:rgba(255,255,255,0.22);
+  --border:rgba(0,175,171,0.16);--border-hi:rgba(0,175,171,0.38);
+  --red:#E24B4A;
+  --fd:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+  --fb:'Inter','Segoe UI',system-ui,sans-serif;
+}
+html{height:100%;background:var(--black);color:var(--white);font-family:var(--fb);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{display:flex;flex-direction:column;height:100%;min-height:100vh;margin:0;padding:0;background:var(--black);overflow:hidden}
+/* When embedded as iframe, height comes from the iframe container */
+@media (max-height:500px){
+  #narration{display:none}
+  #embed-footer{display:none}
+}
+
+/* ── PLAYER: fills all remaining space after controls + narration + footer ── */
+#player{
+  position:relative;width:100%;flex:1;min-height:0;
+  overflow:hidden;background:var(--black);
+}
+#player::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,175,171,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,175,171,0.025) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ── SCENES ── */
+.scene{
+  position:absolute;inset:0;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(8px,2vh,40px) clamp(12px,3vw,52px);
+  opacity:0;pointer-events:none;transition:opacity 0.65s ease;
+}
+.scene.active{opacity:1;pointer-events:all}
+#s1{background:radial-gradient(ellipse 65% 55% at 50% 65%,rgba(0,175,171,0.09) 0%,transparent 70%)}
+#s2{background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(0,175,171,0.06) 0%,transparent 65%)}
+#s3{background:radial-gradient(ellipse 55% 55% at 50% 45%,rgba(0,175,171,0.12) 0%,transparent 65%)}
+#s4{background:radial-gradient(ellipse 60% 50% at 50% 55%,rgba(0,175,171,0.07) 0%,transparent 65%)}
+#s5{background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(0,175,171,0.08) 0%,transparent 65%)}
+#s6{background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,175,171,0.07) 0%,transparent 65%)}
+#s7{background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(0,175,171,0.14) 0%,rgba(0,74,69,0.05) 55%,transparent 75%)}
+
+/* ── NAV LOGO ── */
+#nav-logo{position:absolute;top:clamp(10px,2%,20px);left:clamp(12px,2.5%,26px);z-index:10}
+#nav-logo svg{width:clamp(52px,6.5vw,82px);height:auto}
+
+/* ── SCENE COUNTER ── */
+#scene-counter{
+  position:absolute;top:clamp(10px,2%,20px);right:clamp(12px,2.5%,26px);z-index:10;
+  font-size:clamp(9px,1vw,11px);color:var(--dim);letter-spacing:0.1em;
+  font-family:var(--fd);font-weight:500;
+}
+
+/* ── PROGRESS ── */
+#progress-wrap{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.06);z-index:10}
+#progress-bar{height:100%;background:var(--teal);width:0%;transition:width 0.4s linear}
+
+/* ── TYPOGRAPHY ── */
+.scene-title{
+  font-family:var(--fd);font-size:clamp(16px,3.6vw,52px);
+  font-weight:800;line-height:1.08;text-align:center;letter-spacing:-0.025em;
+}
+.scene-sub{
+  font-size:clamp(10px,1.1vw,14px);color:var(--muted);text-align:center;
+  max-width:min(560px,80%);line-height:1.75;margin-top:clamp(6px,1%,12px);font-weight:400;
+}
+.label-tag{
+  font-size:clamp(8px,0.85vw,10px);letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--teal);background:rgba(0,175,171,0.1);border:1px solid rgba(0,175,171,0.28);
+  padding:3px 12px;border-radius:20px;margin-bottom:clamp(8px,1.2%,18px);
+  display:inline-block;font-family:var(--fd);font-weight:600;
+}
+.teal{color:var(--teal)}
+
+/* ── ANIMATIONS ── */
+@keyframes slideUp {from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn  {from{opacity:0}to{opacity:1}}
+@keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,175,171,0.2)}50%{box-shadow:0 0 0 16px rgba(0,175,171,0)}}
+@keyframes nodeIn  {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes arrowIn {to{opacity:1}}
+@keyframes warnBlink{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+@keyframes crackIn {to{opacity:1}}
+
+.a1{animation:slideUp 0.55s 0.10s both}
+.a2{animation:slideUp 0.55s 0.25s both}
+.a3{animation:slideUp 0.55s 0.40s both}
+.a4{animation:slideUp 0.55s 0.56s both}
+.a5{animation:fadeIn  0.75s 0.70s both}
+
+/* ── S1: PIPELINE ── */
+.pipeline{display:flex;align-items:center;margin:clamp(12px,2%,32px) 0 clamp(10px,1.5%,24px)}
+.pipe-node{display:flex;flex-direction:column;align-items:center;gap:clamp(3px,0.4%,6px);opacity:0;animation:nodeIn 0.5s ease forwards}
+.pipe-icon{
+  width:clamp(32px,4.8vw,50px);height:clamp(32px,4.8vw,50px);
+  border-radius:clamp(7px,1vw,13px);background:var(--black2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(13px,1.9vw,20px);position:relative;
+}
+.pipe-label{font-size:clamp(7px,0.8vw,10px);color:var(--muted);letter-spacing:0.05em;font-family:var(--fd);font-weight:500}
+.pipe-arrow{
+  width:clamp(24px,3.5vw,42px);height:2px;margin-bottom:clamp(14px,1.8%,22px);opacity:0;
+  background:linear-gradient(90deg,rgba(0,175,171,0.6),rgba(0,175,171,0.12));
+  position:relative;animation:arrowIn 0.4s ease forwards;
+}
+.pipe-arrow::after{content:'';position:absolute;right:-4px;top:-3px;border:4px solid transparent;border-left:6px solid rgba(0,175,171,0.45)}
+.warn{position:absolute;top:-7px;right:-7px;width:16px;height:16px;border-radius:50%;background:var(--red);font-size:9px;display:flex;align-items:center;justify-content:center;opacity:0;animation:warnBlink 1.5s 2s infinite}
+.crack{position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red);opacity:0;border-radius:2px;animation:crackIn 0.3s 2.1s ease forwards}
+.pipe-node:nth-child(1){animation-delay:.2s}.pipe-node:nth-child(3){animation-delay:.6s}
+.pipe-node:nth-child(5){animation-delay:1.0s}.pipe-node:nth-child(7){animation-delay:1.4s}
+.pipe-arrow:nth-child(2){animation-delay:.5s}.pipe-arrow:nth-child(4){animation-delay:.9s}.pipe-arrow:nth-child(6){animation-delay:1.3s}
+
+/* ── S2: PROBLEM PANELS ── */
+.panels-grid{display:flex;gap:clamp(10px,1.5%,18px);margin-top:clamp(14px,2%,30px);flex-wrap:wrap;justify-content:center}
+.problem-panel{
+  width:clamp(130px,18vw,192px);background:var(--black2);border:1px solid var(--border);
+  border-radius:clamp(10px,1.2vw,16px);padding:clamp(14px,2%,22px) clamp(12px,1.5%,18px);
+  text-align:center;opacity:0;transform:translateY(18px);transition:all 0.5s ease;
+}
+.problem-panel.show{opacity:1;transform:translateY(0)}
+.panel-icon{font-size:clamp(18px,2.4vw,26px);margin-bottom:clamp(6px,0.8%,10px)}
+.panel-title{font-family:var(--fd);font-size:clamp(10px,1.1vw,14px);font-weight:700;margin-bottom:5px}
+.panel-sub{font-size:clamp(9px,0.9vw,11px);color:var(--muted);line-height:1.5}
+.panel-bar{height:2px;border-radius:2px;margin:10px auto 0;width:28px;background:var(--teal)}
+
+/* ── S3: AGENT ── */
+.agent-orb{
+  width:clamp(70px,9vw,108px);height:clamp(70px,9vw,108px);border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,rgba(0,175,171,0.35),rgba(0,74,69,0.2));
+  border:1px solid rgba(0,175,171,0.42);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(26px,3.8vw,42px);
+  animation:orbPulse 3s ease-in-out infinite;margin-bottom:clamp(12px,1.5%,20px);
+}
+.connections{display:flex;gap:clamp(6px,1%,12px);margin-top:clamp(14px,2%,24px);flex-wrap:wrap;justify-content:center}
+.conn-node{
+  padding:clamp(4px,0.5%,7px) clamp(10px,1.5%,17px);border-radius:30px;
+  background:var(--black2);border:1px solid var(--border);
+  font-size:clamp(9px,1vw,12px);color:var(--muted);
+  opacity:0;transform:scale(0.85);transition:all 0.4s ease;
+  font-family:var(--fd);font-weight:500;
+}
+.conn-node.show{opacity:1;transform:scale(1)}
+.conn-node:hover{border-color:var(--border-hi);color:var(--teal-light)}
+
+/* ── S4: FLOW STEPS ── */
+.flow-steps{display:flex;flex-direction:column;gap:clamp(7px,1%,12px);width:100%;max-width:min(540px,88%);margin-top:clamp(14px,2%,24px)}
+.flow-step{
+  display:flex;align-items:center;gap:clamp(10px,1.5%,14px);
+  background:var(--black2);border:1px solid var(--border);
+  border-radius:clamp(8px,1vw,13px);padding:clamp(10px,1.2%,14px) clamp(12px,1.5%,18px);
+  opacity:0;transform:translateX(-16px);transition:all 0.45s ease;
+}
+.flow-step.show{opacity:1;transform:translateX(0)}
+.step-num{
+  width:clamp(22px,2.8vw,30px);height:clamp(22px,2.8vw,30px);border-radius:50%;
+  background:rgba(0,175,171,0.12);border:1px solid rgba(0,175,171,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(9px,1vw,12px);font-weight:700;color:var(--teal);flex-shrink:0;font-family:var(--fd);
+}
+.step-title{font-size:clamp(10px,1.1vw,13px);font-weight:500;font-family:var(--fd);flex:1}
+.step-badge{
+  font-size:clamp(8px,0.8vw,10px);color:var(--teal);background:rgba(0,175,171,0.1);
+  border:1px solid rgba(0,175,171,0.25);padding:clamp(2px,0.3%,3px) clamp(7px,1%,10px);
+  border-radius:10px;white-space:nowrap;font-family:var(--fd);font-weight:600;
+}
+.passport-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,175,171,0.1);border:1px solid rgba(0,175,171,0.36);
+  border-radius:30px;padding:clamp(6px,0.8%,9px) clamp(14px,2%,22px);
+  font-size:clamp(10px,1.1vw,13px);font-weight:600;color:var(--teal-light);
+  margin-top:clamp(10px,1.5%,18px);opacity:0;transition:opacity 0.6s ease;font-family:var(--fd);
+}
+.passport-badge.show{opacity:1}
+
+/* ── S5: METRICS ── */
+.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(8px,1.2%,14px);width:100%;max-width:min(490px,86%);margin-top:clamp(14px,2%,24px)}
+.metric-card{
+  background:var(--black2);border:1px solid var(--border);
+  border-radius:clamp(10px,1.2vw,15px);padding:clamp(12px,1.5%,20px) clamp(12px,1.5%,18px);
+  opacity:0;transform:translateY(12px);transition:all 0.5s ease;position:relative;overflow:hidden;
+}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--teal)}
+.metric-card.show{opacity:1;transform:translateY(0)}
+.metric-value{font-family:var(--fd);font-size:clamp(18px,2.8vw,28px);font-weight:800;color:var(--teal);margin-bottom:3px}
+.metric-label{font-size:clamp(9px,0.9vw,11px);color:var(--muted);font-weight:400}
+
+/* ── S6: CHECKLIST ── */
+.checklist{display:flex;flex-direction:column;gap:clamp(7px,1%,10px);width:100%;max-width:min(410px,85%);margin-top:clamp(14px,2%,22px)}
+.check-item{
+  display:flex;align-items:center;gap:clamp(10px,1.5%,14px);
+  background:var(--black2);border:1px solid var(--border);
+  border-radius:clamp(8px,1vw,12px);padding:clamp(10px,1.2%,13px) clamp(12px,1.5%,16px);
+  opacity:0;transition:all 0.5s ease;
+}
+.check-item.show{opacity:1}
+.check-circle{
+  width:clamp(20px,2.5vw,24px);height:clamp(20px,2.5vw,24px);border-radius:50%;
+  background:rgba(0,175,171,0.08);border:1.5px solid rgba(0,175,171,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(9px,1vw,12px);color:var(--teal);flex-shrink:0;transition:all 0.4s;
+}
+.check-item.checked .check-circle{background:rgba(0,175,171,0.18);border-color:var(--teal)}
+.check-text{font-size:clamp(10px,1.1vw,13px);font-family:var(--fd);font-weight:500}
+.stamp{
+  margin-top:clamp(12px,1.8%,22px);padding:clamp(8px,1%,11px) clamp(18px,2.5%,28px);
+  border-radius:40px;background:rgba(0,175,171,0.12);border:1.5px solid var(--teal);
+  color:var(--teal);font-family:var(--fd);font-size:clamp(10px,1.1vw,13px);
+  font-weight:800;letter-spacing:0.08em;
+  opacity:0;transform:scale(0.8);transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.stamp.show{opacity:1;transform:scale(1)}
+
+/* ── S7: FINAL + CTA ── */
+.final-logo svg{width:clamp(110px,15vw,200px);height:auto}
+.product-name{
+  font-family:var(--fd);font-size:clamp(12px,1.6vw,20px);
+  font-weight:400;color:var(--muted);letter-spacing:0.05em;margin-top:4px;
+}
+.divider-teal{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-btn));margin:clamp(10px,1.5%,18px) auto;border-radius:2px}
+.tagline{
+  font-family:var(--fd);font-size:clamp(16px,3.2vw,44px);
+  font-weight:800;letter-spacing:-0.02em;line-height:1.1;text-align:center;
+}
+.tagline span{color:var(--teal)}
+.tagline-sub{font-size:clamp(9px,1vw,13px);color:var(--muted);margin-top:8px;letter-spacing:0.04em;text-align:center}
+
+/* CTA button */
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:clamp(12px,1.8%,24px);
+  padding:clamp(10px,1.2%,14px) clamp(20px,3%,32px);
+  background:var(--teal);color:var(--black);
+  font-family:var(--fd);font-size:clamp(11px,1.2vw,15px);font-weight:700;
+  border-radius:40px;border:none;cursor:pointer;
+  text-decoration:none;
+  transition:background 0.2s,transform 0.15s;
+  letter-spacing:0.01em;
+}
+.cta-btn:hover{background:var(--teal-light);transform:translateY(-1px)}
+.cta-btn:active{transform:scale(0.98)}
+.cta-arrow{font-size:1.1em;transition:transform 0.2s}
+.cta-btn:hover .cta-arrow{transform:translateX(3px)}
+
+/* Persistent CTA strip — visible on all scenes */
+#cta-strip{
+  position:absolute;bottom:clamp(28px,4%,42px);right:clamp(12px,2%,24px);
+  z-index:8;opacity:0;transition:opacity 0.5s ease;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(12,17,29,0.85);border:1px solid var(--border-hi);
+  border-radius:30px;padding:clamp(5px,0.7%,8px) clamp(12px,1.5%,18px);
+  backdrop-filter:blur(12px);
+  text-decoration:none;
+}
+#cta-strip.visible{opacity:1}
+#cta-strip:hover{background:rgba(0,175,171,0.12);border-color:var(--teal)}
+.strip-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:warnBlink 2s ease-in-out infinite}
+.strip-text{font-size:clamp(9px,1vw,11px);color:var(--teal-light);font-family:var(--fd);font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+
+/* ── CONTROLS: fixed strip, never shrinks ── */
+#controls{
+  display:flex;align-items:center;justify-content:center;
+  gap:clamp(4px,0.7%,10px);
+  background:var(--black2);
+  border-top:1px solid var(--border-hi);
+  border-bottom:1px solid rgba(0,175,171,0.08);
+  padding:8px clamp(12px,2%,24px);
+  flex-shrink:0;
+  flex-wrap:wrap;
+}
+#controls button{
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:clamp(10px,1vw,12px);font-family:var(--fd);font-weight:500;
+  padding:clamp(3px,0.5%,6px) clamp(8px,1.2%,13px);border-radius:30px;
+  transition:background 0.2s,color 0.2s;white-space:nowrap;
+}
+#controls button:hover{background:rgba(0,175,171,0.12);color:var(--white)}
+#controls button.play-btn{
+  background:var(--teal);color:var(--black);font-weight:800;
+  padding:clamp(6px,1%,10px) clamp(18px,2.5%,28px);
+  font-size:clamp(11px,1.1vw,14px);
+  box-shadow:0 0 0 0 rgba(0,175,171,0.4);
+  animation:playPulse 2.5s ease-in-out infinite;
+}
+#controls button.play-btn:hover{background:var(--teal-light);transform:translateY(-1px);animation:none;box-shadow:0 4px 16px rgba(0,175,171,0.35)}
+#controls button.play-btn.active{background:rgba(0,175,171,0.25);color:var(--white);animation:none;box-shadow:none}
+@keyframes playPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,175,171,0.4)}60%{box-shadow:0 0 0 8px rgba(0,175,171,0)}}
+#scene-dots{display:flex;gap:clamp(4px,0.6%,7px);align-items:center}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--dim);cursor:pointer;transition:background 0.3s,transform 0.3s}
+.dot.active{background:var(--teal);transform:scale(1.6)}
+#scene-lbl{font-size:clamp(9px,0.85vw,11px);color:var(--dim);letter-spacing:0.08em;min-width:clamp(70px,10vw,90px);text-align:center}
+#share-btn,#fs-btn-ctrl{opacity:0.6;transition:opacity 0.2s,background 0.2s}
+#share-btn:hover,#fs-btn-ctrl:hover{opacity:1;background:rgba(0,175,171,0.12);color:var(--white)}
+#share-btn.copied{color:var(--teal);opacity:1}
+
+/* ── FULLSCREEN BTN ── */
+#fs-btn{
+  position:absolute;top:clamp(10px,1.5%,18px);right:clamp(10px,1.5%,18px);z-index:20;
+  background:rgba(12,17,29,0.7);border:1px solid var(--border);
+  border-radius:8px;width:clamp(24px,3vw,30px);height:clamp(24px,3vw,30px);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--dim);font-size:clamp(10px,1.2vw,13px);transition:all 0.2s;
+}
+#fs-btn:hover{background:rgba(0,175,171,0.15);border-color:var(--border-hi);color:var(--white)}
+
+/* ── NARRATION BAR: compact fixed strip ── */
+#narration{
+  background:rgba(10,14,24,0.96);border-top:1px solid var(--border);
+  padding:7px clamp(14px,2.5%,36px);
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;min-height:0;
+}
+.narr-icon{
+  width:clamp(18px,2.2vw,22px);height:clamp(18px,2.2vw,22px);border-radius:50%;
+  background:rgba(0,175,171,0.12);border:1px solid var(--border-hi);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(9px,1vw,11px);color:var(--teal);
+}
+#narr-text{
+  font-size:clamp(9px,1vw,12px);color:var(--muted);line-height:1.4;
+  font-family:var(--fb);font-style:italic;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* ── EMBED FOOTER: minimal height ── */
+#embed-footer{
+  background:var(--black2);border-top:1px solid rgba(0,175,171,0.1);
+  padding:6px clamp(12px,2%,28px);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;gap:8px;flex-wrap:wrap;
+}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-brand svg{width:clamp(44px,6vw,64px);height:auto;opacity:0.7}
+.footer-brand span{font-size:clamp(9px,0.9vw,11px);color:var(--dim);font-family:var(--fd);font-weight:500;letter-spacing:0.05em}
+.footer-link{
+  font-size:clamp(9px,0.9vw,11px);color:var(--teal);font-family:var(--fd);font-weight:600;
+  text-decoration:none;letter-spacing:0.04em;border:1px solid var(--border-hi);
+  padding:4px 14px;border-radius:20px;transition:all 0.2s;white-space:nowrap;
+}
+.footer-link:hover{background:rgba(0,175,171,0.1)}
+</style>
+</head>
+<body>
+
+<div id="player" role="region" aria-label="Quality Guard product demo">
+
+  <!-- Equiti logo -->
+  <div id="nav-logo" aria-hidden="true">
+    <svg viewBox="0 0 218 80.8" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#00AFAB}</style><g><path class="st0" d="M198.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C197.2,16.8,197.8,16.2,198.6,16.2"/><path class="st0" d="M142.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C141.2,16.8,141.8,16.2,142.6,16.2"/><path class="st0" d="M180,27.3h9.2c0.8,0,1.4-0.6,1.4-1.4v-8.4c0-0.8-0.6-1.4-1.4-1.4h-27.6c-0.8,0-1.4,0.6-1.4,1.4V26c0,0.8,0.6,1.4,1.4,1.4h6v16.3c0,0,0,0.1,0,0.1c0.3,9,7.6,15.3,16.6,15.3h4.9c0.7,0,1.3-0.5,1.3-1.2v-0.2v-7.6v-1.2c0-0.8-0.6-1.4-1.4-1.4h-3c-0.1,0-0.2,0-0.2,0c-3.1,0-5.6-2.4-6-5.4v-1.3V27.3z"/><path class="st0" d="M134.5,17.4c0-0.7-0.6-1.2-1.2-1.2h-9.9c-0.7,0-1.2,0.6-1.2,1.2l0,29.4c-3.6,2.2-6.9,2.1-6.9,2.1c-6,0-6-5.8-6-5.8V17.5c0-0.8-0.6-1.4-1.4-1.4h-9.6c-0.8,0-1.4,0.6-1.4,1.4v24.8c0,0,0,0.1,0,0.1c0.1,4.4,1.9,8.4,4.7,11.4c0.5,0.7,1.3,1.3,2.1,1.9c2.8,2.1,6.4,3.4,10.2,3.4c0.5,0,1.9,0,2.1,0c5.7-0.1,10.8-1.1,15.3-2.9c2.6-1.1,3.2-2,3.2-4.7V17.4z"/><path class="st0" d="M45.9,31.5c-0.2-9.2-7.8-16.6-17-16.6h-5.3c-9.3,0-16.8,7.4-17,16.6h0v10.6c0,9.4,7.6,17.1,17.1,17.1h2.6v0c8.8,0,14.7-2.6,17.9-7.6c1.2-2.1,0.8-3.8-1.3-4.8l-4-2c-2.4-1.2-3.4-0.9-4.7,1.1C32.4,48,30,49,26.5,49c-0.1,0-0.2,0-0.3,0v0h-1.3c-6,0-6-5.8-6-5.8v-1.5h22.8c2.9,0,4.3-1.4,4.3-4.1L45.9,31.5L45.9,31.5z M33.5,32.7H18.9V31c0,0,0.1-5.8,6-5.8h2.6c6,0,6,5.8,6,5.8V32.7z"/><path class="st0" d="M87,17.9c-2.1-0.9-8.2-2.7-14.8-2.9v10.1h2.5c1.7,0,3,1.4,3,3v17.6c0,1.7-1.4,3.1-3,3.1h-2.5c0,0,0,10.3,0,10.3c1.8,0,4.2-0.2,5.6-0.7v11.5c0,0.8,0.6,1.4,1.4,1.4h9.6c0.8,0,1.4-0.6,1.4-1.4V26.8v-4.2C90.2,19.9,89.6,18.9,87,17.9"/><path class="st0" d="M68,48.8c-1.7,0-3-1.4-3-3V28.2c0-1.7,1.4-3,3-3h2.5V14.9h-0.9c-9.3,0-16.8,7.4-17,16.6h0v10.6c0,9.4,7.6,17.1,17.1,17.1c0.1,0,0.4,0,0.9,0c0,0,0-10.4,0-10.4H68z"/></g></svg>
+  </div>
+
+  <div id="scene-counter" aria-live="polite">1 / 7</div>
+
+  <!-- Persistent CTA strip (shows from scene 3 onward) -->
+  <a id="cta-strip" href="https://quality-guard-payment-857138853031.us-central1.run.app/" onclick="openTF(event)" aria-label="Open TradeFlow – Deposit Funds">
+    <span class="strip-dot"></span>
+    <span class="strip-text">TradeFlow — Deposit Funds ↗</span>
+  </a>
+
+  <!-- ── SCENE 1 ── -->
+  <div class="scene active" id="s1" aria-label="Scene 1: The Problem">
+    <div class="label-tag a1">01 — The Problem</div>
+    <div class="pipeline" aria-hidden="true">
+      <div class="pipe-node"><div class="pipe-icon">💻</div><div class="pipe-label">Code Complete</div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="pipe-icon">🧪<span class="warn" aria-hidden="true">!</span><span class="crack"></span></div><div class="pipe-label">QA</div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="pipe-icon" style="border-color:rgba(226,75,74,0.4)">🏛️<span class="warn" style="animation-delay:.3s" aria-hidden="true">!</span></div><div class="pipe-label">TRB</div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="pipe-icon" style="opacity:.35">🚀</div><div class="pipe-label">Production</div></div>
+    </div>
+    <div class="a2"><div class="scene-title">Release Readiness<br><span class="teal">is Broken.</span></div></div>
+    <p class="scene-sub a5">The journey from code complete to production is the most fragmented phase of delivery. This bottleneck costs time, confidence, and quality.</p>
+  </div>
+
+  <!-- ── SCENE 2 ── -->
+  <div class="scene" id="s2" aria-label="Scene 2: Three Problems">
+    <div class="label-tag a1">02 — Real Problems</div>
+    <div class="scene-title a2" style="font-size:clamp(15px,3vw,40px)">Three Cracks in<br>Every Release</div>
+    <div class="panels-grid">
+      <div class="problem-panel" id="p1"><div class="panel-icon">📄</div><div class="panel-title">Documentation Decay</div><div class="panel-sub">Manual TRNs lose context over time</div><div class="panel-bar"></div></div>
+      <div class="problem-panel" id="p2"><div class="panel-icon">🔬</div><div class="panel-title">Static Testing</div><div class="panel-sub">Real production risks are missed entirely</div><div class="panel-bar"></div></div>
+      <div class="problem-panel" id="p3"><div class="panel-icon">🏛️</div><div class="panel-title">Governance Gridlock</div><div class="panel-sub">Week-long approval delays compound</div><div class="panel-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 3 ── -->
+  <div class="scene" id="s3" aria-label="Scene 3: Meet Quality Guard">
+    <div class="label-tag a1">03 — The Solution</div>
+    <div class="agent-orb a2" aria-hidden="true">🛡️</div>
+    <div class="scene-title a3">Meet Quality Guard</div>
+    <p class="scene-sub a4">An AI-powered Autonomous Readiness Agent.<br>Your digital deputy for the entire release process.</p>
+    <div class="connections" aria-label="Integrated with">
+      <div class="conn-node" id="cn1">⚡ Code</div>
+      <div class="conn-node" id="cn2">☁️ Cloud</div>
+      <div class="conn-node" id="cn3">🧪 Tests</div>
+      <div class="conn-node" id="cn4">📋 Incidents</div>
+      <div class="conn-node" id="cn5">📊 TRB</div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 4 ── -->
+  <div class="scene" id="s4" aria-label="Scene 4: How It Works">
+    <div class="label-tag a1">04 — How It Works</div>
+    <div class="scene-title a2" style="font-size:clamp(14px,2.8vw,38px)">Automated. Intelligent.<br>Continuous.</div>
+    <div class="flow-steps">
+      <div class="flow-step" id="fs1"><div class="step-num">1</div><div class="step-title">Scans cloud configuration</div><div class="step-badge">Environmental Intelligence</div></div>
+      <div class="flow-step" id="fs2"><div class="step-num">2</div><div class="step-title">Replays incident logs as learning signals</div><div class="step-badge">History-Driven Protection</div></div>
+      <div class="flow-step" id="fs3"><div class="step-num">3</div><div class="step-title">Auto-generates and runs targeted tests</div><div class="step-badge">Intelligent Verification</div></div>
+      <div class="flow-step" id="fs4"><div class="step-num">4</div><div class="step-title">Assembles complete release documentation</div><div class="step-badge">Zero Manual Effort</div></div>
+    </div>
+    <div class="passport-badge" id="passport">✅ Ready-to-Ship Passport — Generated</div>
+  </div>
+
+  <!-- ── SCENE 5 ── -->
+  <div class="scene" id="s5" aria-label="Scene 5: Impact">
+    <div class="label-tag a1">05 — Impact</div>
+    <div class="scene-title a2" style="font-size:clamp(15px,3.2vw,42px)">Confidence<br>Becomes the Default</div>
+    <div class="metrics-grid">
+      <div class="metric-card" id="m1"><div class="metric-value" id="mv1">0min</div><div class="metric-label">Approval Time</div></div>
+      <div class="metric-card" id="m2"><div class="metric-value" id="mv2">0%</div><div class="metric-label">Incident Reduction</div></div>
+      <div class="metric-card" id="m3"><div class="metric-value">Zero</div><div class="metric-label">Documentation Burnout</div></div>
+      <div class="metric-card" id="m4"><div class="metric-value" id="mv4">0%</div><div class="metric-label">Release Confidence</div></div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 6 ── -->
+  <div class="scene" id="s6" aria-label="Scene 6: Technical Readiness">
+    <div class="label-tag a1">06 — Technical Readiness</div>
+    <div class="scene-title a2" style="font-size:clamp(15px,3.2vw,42px)">Continuous<br>Readiness</div>
+    <div class="checklist">
+      <div class="check-item" id="ci1"><div class="check-circle">✓</div><div class="check-text">Built on real incident data</div></div>
+      <div class="check-item" id="ci2"><div class="check-circle">✓</div><div class="check-text">Aligned to existing TRB standards</div></div>
+      <div class="check-item" id="ci3"><div class="check-circle">✓</div><div class="check-text">Integrated with stakeholder workflows</div></div>
+      <div class="check-item" id="ci4"><div class="check-circle">✓</div><div class="check-text">Not theoretical AI — production-proven</div></div>
+    </div>
+    <div class="stamp" id="trb-stamp">✅ TRB APPROVAL — INSTANT</div>
+  </div>
+
+  <!-- ── SCENE 7: FINAL ── -->
+  <div class="scene" id="s7" aria-label="Scene 7: Quality Guard">
+    <div class="final-logo a1" aria-label="Equiti">
+      <svg viewBox="0 0 218 80.8" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#00AFAB}</style><g><path class="st0" d="M198.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C197.2,16.8,197.8,16.2,198.6,16.2"/><path class="st0" d="M142.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C141.2,16.8,141.8,16.2,142.6,16.2"/><path class="st0" d="M180,27.3h9.2c0.8,0,1.4-0.6,1.4-1.4v-8.4c0-0.8-0.6-1.4-1.4-1.4h-27.6c-0.8,0-1.4,0.6-1.4,1.4V26c0,0.8,0.6,1.4,1.4,1.4h6v16.3c0,0,0,0.1,0,0.1c0.3,9,7.6,15.3,16.6,15.3h4.9c0.7,0,1.3-0.5,1.3-1.2v-0.2v-7.6v-1.2c0-0.8-0.6-1.4-1.4-1.4h-3c-0.1,0-0.2,0-0.2,0c-3.1,0-5.6-2.4-6-5.4v-1.3V27.3z"/><path class="st0" d="M134.5,17.4c0-0.7-0.6-1.2-1.2-1.2h-9.9c-0.7,0-1.2,0.6-1.2,1.2l0,29.4c-3.6,2.2-6.9,2.1-6.9,2.1c-6,0-6-5.8-6-5.8V17.5c0-0.8-0.6-1.4-1.4-1.4h-9.6c-0.8,0-1.4,0.6-1.4,1.4v24.8c0.1,4.4,1.9,8.4,4.7,11.4c0.5,0.7,1.3,1.3,2.1,1.9c2.8,2.1,6.4,3.4,10.2,3.4c0.5,0,1.9,0,2.1,0c5.7-0.1,10.8-1.1,15.3-2.9c2.6-1.1,3.2-2,3.2-4.7V17.4z"/><path class="st0" d="M45.9,31.5c-0.2-9.2-7.8-16.6-17-16.6h-5.3c-9.3,0-16.8,7.4-17,16.6h0v10.6c0,9.4,7.6,17.1,17.1,17.1h2.6c8.8,0,14.7-2.6,17.9-7.6c1.2-2.1,0.8-3.8-1.3-4.8l-4-2c-2.4-1.2-3.4-0.9-4.7,1.1C32.4,48,30,49,26.5,49c-0.1,0-0.2,0-0.3,0h-1.3c-6,0-6-5.8-6-5.8v-1.5h22.8c2.9,0,4.3-1.4,4.3-4.1L45.9,31.5L45.9,31.5z M33.5,32.7H18.9V31c0,0,0.1-5.8,6-5.8h2.6c6,0,6,5.8,6,5.8V32.7z"/><path class="st0" d="M87,17.9c-2.1-0.9-8.2-2.7-14.8-2.9v10.1h2.5c1.7,0,3,1.4,3,3v17.6c0,1.7-1.4,3.1-3,3.1h-2.5v10.3c1.8,0,4.2-0.2,5.6-0.7v11.5c0,0.8,0.6,1.4,1.4,1.4h9.6c0.8,0,1.4-0.6,1.4-1.4V26.8v-4.2C90.2,19.9,89.6,18.9,87,17.9"/><path class="st0" d="M68,48.8c-1.7,0-3-1.4-3-3V28.2c0-1.7,1.4-3,3-3h2.5V14.9h-0.9c-9.3,0-16.8,7.4-17,16.6h0v10.6c0,9.4,7.6,17.1,17.1,17.1c0.1,0,0.4,0,0.9,0v-10.4H68z"/></g></svg>
+    </div>
+    <div class="product-name a2">Quality Guard</div>
+    <div class="divider-teal a3"></div>
+    <div class="tagline a3">Release Faster.<br><span>Release Safer.</span></div>
+    <p class="tagline-sub a4">Powered by Equiti · Continuous Release Readiness</p>
+    <a class="cta-btn a5" href="https://quality-guard-payment-857138853031.us-central1.run.app/" onclick="openTF(event)">
+      TradeFlow — Deposit Funds <span class="cta-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Progress (stays inside player at bottom edge) -->
+  <div id="progress-wrap" aria-hidden="true"><div id="progress-bar"></div></div>
+
+</div>
+
+<!-- Controls: OUTSIDE player so overflow:hidden never clips them -->
+<div id="controls" role="navigation" aria-label="Presentation controls">
+  <button class="play-btn" id="playBtn" onclick="togglePlay()" aria-label="Play or pause">▶ Play</button>
+  <div id="scene-dots" role="tablist" aria-label="Jump to scene"></div>
+  <span id="scene-lbl" aria-live="polite"></span>
+  <button onclick="prevScene()" aria-label="Previous scene">← Prev</button>
+  <button onclick="nextScene()" aria-label="Next scene">Next →</button>
+  <button onclick="copyLink(this)" id="share-btn" aria-label="Copy shareable link" title="Copy link">🔗 Copy Link</button>
+  <button onclick="goFullscreen()" id="fs-btn-ctrl" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+</div>
+
+<!-- Narration bar -->
+<div id="narration" aria-live="polite">
+  <div class="narr-icon" aria-hidden="true">▶</div>
+  <p id="narr-text"></p>
+</div>
+
+<!-- Footer -->
+<footer id="embed-footer">
+  <div class="footer-brand">
+    <svg viewBox="0 0 218 80.8" xmlns="http://www.w3.org/2000/svg" aria-label="Equiti"><style>.st0{fill:#00AFAB}</style><g><path class="st0" d="M198.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C197.2,16.8,197.8,16.2,198.6,16.2"/><path class="st0" d="M142.6,16.2h9.6c0.8,0,1.4,0.6,1.4,1.4v39.8c0,0.8-0.6,1.4-1.4,1.4h-9.6c-0.8,0-1.4-0.6-1.4-1.4V17.5C141.2,16.8,141.8,16.2,142.6,16.2"/><path class="st0" d="M180,27.3h9.2c0.8,0,1.4-0.6,1.4-1.4v-8.4c0-0.8-0.6-1.4-1.4-1.4h-27.6c-0.8,0-1.4,0.6-1.4,1.4V26c0,0.8,0.6,1.4,1.4,1.4h6v16.3c0.3,9,7.6,15.3,16.6,15.3h4.9c0.7,0,1.3-0.5,1.3-1.2v-9h-3c-3.1,0-5.6-2.4-6-5.4v-1.3V27.3z"/><path class="st0" d="M134.5,17.4c0-0.7-0.6-1.2-1.2-1.2h-9.9c-0.7,0-1.2,0.6-1.2,1.2l0,29.4c-3.6,2.2-6.9,2.1-6.9,2.1c-6,0-6-5.8-6-5.8V17.5c0-0.8-0.6-1.4-1.4-1.4h-9.6c-0.8,0-1.4,0.6-1.4,1.4v24.8c0.1,4.4,1.9,8.4,4.7,11.4c0.5,0.7,1.3,1.3,2.1,1.9c2.8,2.1,6.4,3.4,10.2,3.4c0.5,0,1.9,0,2.1,0c5.7-0.1,10.8-1.1,15.3-2.9c2.6-1.1,3.2-2,3.2-4.7V17.4z"/><path class="st0" d="M45.9,31.5c-0.2-9.2-7.8-16.6-17-16.6h-5.3c-9.3,0-16.8,7.4-17,16.6v10.6c0,9.4,7.6,17.1,17.1,17.1h2.6c8.8,0,14.7-2.6,17.9-7.6c1.2-2.1,0.8-3.8-1.3-4.8l-4-2c-2.4-1.2-3.4-0.9-4.7,1.1C32.4,48,30,49,26.5,49h-1.6c-6,0-6-5.8-6-5.8v-1.5h22.8c2.9,0,4.3-1.4,4.3-4.1L45.9,31.5z M33.5,32.7H18.9V31c0,0,0.1-5.8,6-5.8h2.6c6,0,6,5.8,6,5.8V32.7z"/><path class="st0" d="M87,17.9c-2.1-0.9-8.2-2.7-14.8-2.9v10.1h2.5c1.7,0,3,1.4,3,3v17.6c0,1.7-1.4,3.1-3,3.1h-2.5v10.3c1.8,0,4.2-0.2,5.6-0.7v11.5c0,0.8,0.6,1.4,1.4,1.4h9.6c0.8,0,1.4-0.6,1.4-1.4V26.8v-4.2C90.2,19.9,89.6,18.9,87,17.9"/><path class="st0" d="M68,48.8c-1.7,0-3-1.4-3-3V28.2c0-1.7,1.4-3,3-3h2.5V14.9h-0.9c-9.3,0-16.8,7.4-17,16.6v10.6c0,9.4,7.6,17.1,17.1,17.1c0.1,0,0.4,0,0.9,0v-10.4H68z"/></g></svg>
+    <span>Quality Guard · Internal Demo</span>
+  </div>
+  <a class="footer-link" href="https://quality-guard-payment-857138853031.us-central1.run.app/" onclick="openTF(event)">TradeFlow — Deposit Funds ↗</a>
+</footer>
+
+<script>
+const SCENES = ['s1','s2','s3','s4','s5','s6','s7'];
+const DURATIONS = [8,8,8,10,8,8,10]; // seconds
+const LABELS = ['The Problem','Real Problems','The Solution','How It Works','Impact','Readiness','Quality Guard'];
+const NARRATIONS = [
+  'The journey from code complete to production is the most fragmented phase of delivery. This bottleneck costs time, confidence, and quality.',
+  'Documentation decays. Testing ignores reality. Governance slows everything down.',
+  'Quality Guard is an AI-powered Autonomous Readiness Agent — a digital deputy for the entire release process.',
+  'It detects environment mismatches, learns from past production failures, creates targeted tests, and generates a full release passport automatically.',
+  'Approvals shift from days to minutes. Risk becomes visible before production. Confidence becomes the default.',
+  'Built on real incident data, existing TRB standards, and stakeholder workflows. This is not theoretical AI. This is continuous readiness.',
+  'Release Faster. Release Safer. — Quality Guard by Equiti.'
+];
+
+let current=0, playing=false, timer=null, rafId=null, startTime=null;
+
+const dotsEl   = document.getElementById('scene-dots');
+const lblEl    = document.getElementById('scene-lbl');
+const playBtn  = document.getElementById('playBtn');
+const prog     = document.getElementById('progress-bar');
+const narrEl   = document.getElementById('narr-text');
+const ctrEl    = document.getElementById('scene-counter');
+const ctaStrip = document.getElementById('cta-strip');
+
+SCENES.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.setAttribute('role','tab');
+  d.setAttribute('aria-label','Scene '+(i+1)+': '+LABELS[i]);
+  d.setAttribute('aria-selected',i===0?'true':'false');
+  d.setAttribute('tabindex','0');
+  d.onclick=()=>{stopAuto();goTo(i);};
+  d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();stopAuto();goTo(i);}};
+  dotsEl.appendChild(d);
+});
+
+function updateUI(){
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active',i===current);
+    d.setAttribute('aria-selected',String(i===current));
+  });
+  lblEl.textContent = LABELS[current];
+  ctrEl.textContent = (current+1)+' / '+SCENES.length;
+  narrEl.textContent = NARRATIONS[current];
+  ctaStrip.classList.toggle('visible', current >= 2);
+}
+
+function totalDur(){return DURATIONS.reduce((a,b)=>a+b,0);}
+function elapsedBefore(idx){return DURATIONS.slice(0,idx).reduce((a,b)=>a+b,0);}
+
+function goTo(idx){
+  document.getElementById(SCENES[current]).classList.remove('active');
+  current=idx;
+  document.getElementById(SCENES[current]).classList.add('active');
+  triggerAnims(current);
+  updateUI();
+  const e=elapsedBefore(current), t=totalDur();
+  prog.style.transition='none';
+  prog.style.width=(e/t*100)+'%';
+  if(playing){ cancelAnimationFrame(rafId); clearTimeout(timer); requestAnimationFrame(()=>{ prog.style.transition=''; animProg(e,t); scheduleNext(); }); }
+}
+
+function animProg(e,total){
+  startTime=performance.now();
+  const dur=DURATIONS[current]*1000, bW=e/total*100, eW=(e+DURATIONS[current])/total*100;
+  function tick(now){ const frac=Math.min((now-startTime)/dur,1); prog.style.width=(bW+(eW-bW)*frac)+'%'; if(frac<1)rafId=requestAnimationFrame(tick); }
+  rafId=requestAnimationFrame(tick);
+}
+
+function scheduleNext(){
+  clearTimeout(timer);
+  timer=setTimeout(()=>{ if(current<SCENES.length-1)goTo(current+1); else{ stopAuto(); prog.style.width='100%'; }}, DURATIONS[current]*1000);
+}
+
+function togglePlay(){
+  if(playing){stopAuto();}
+  else{
+    playing=true;
+    playBtn.textContent='⏸ Pause';
+    playBtn.classList.add('active');
+    animProg(elapsedBefore(current),totalDur());
+    scheduleNext();
+  }
+}
+function stopAuto(){
+  playing=false; clearTimeout(timer); cancelAnimationFrame(rafId);
+  playBtn.textContent='▶ Play'; playBtn.classList.remove('active');
+}
+function nextScene(){stopAuto();if(current<SCENES.length-1)goTo(current+1);}
+function prevScene(){stopAuto();if(current>0)goTo(current-1);}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextScene();}
+  else if(e.key==='ArrowLeft'){e.preventDefault();prevScene();}
+  else if(e.key==='p'||e.key==='P'){e.preventDefault();togglePlay();}
+});
+
+/* ── SCENE ANIMATIONS ── */
+function triggerAnims(idx){
+  if(idx===1)animS2(); if(idx===2)animS3(); if(idx===3)animS4();
+  if(idx===4)animS5(); if(idx===5)animS6();
+}
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+
+async function animS2(){
+  ['p1','p2','p3'].forEach(p=>document.getElementById(p).classList.remove('show'));
+  await wait(120);
+  for(const p of['p1','p2','p3']){await wait(420);document.getElementById(p).classList.add('show');}
+}
+async function animS3(){
+  ['cn1','cn2','cn3','cn4','cn5'].forEach(n=>document.getElementById(n).classList.remove('show'));
+  await wait(580);
+  for(const n of['cn1','cn2','cn3','cn4','cn5']){await wait(190);document.getElementById(n).classList.add('show');}
+}
+async function animS4(){
+  ['fs1','fs2','fs3','fs4'].forEach(s=>document.getElementById(s).classList.remove('show'));
+  document.getElementById('passport').classList.remove('show');
+  await wait(200);
+  for(const s of['fs1','fs2','fs3','fs4']){await wait(480);document.getElementById(s).classList.add('show');}
+  await wait(560);document.getElementById('passport').classList.add('show');
+}
+async function animS5(){
+  ['m1','m2','m3','m4'].forEach(c=>document.getElementById(c).classList.remove('show'));
+  await wait(280);
+  for(const c of['m1','m2','m3','m4']){await wait(300);document.getElementById(c).classList.add('show');}
+  await wait(200);
+  countUp('mv1',0,8,1200,v=>v+'min');
+  countUp('mv2',0,73,1400,v=>v+'%');
+  countUp('mv4',0,98,1600,v=>v+'%');
+}
+async function animS6(){
+  ['ci1','ci2','ci3','ci4'].forEach(i=>{const el=document.getElementById(i);el.classList.remove('show','checked');});
+  document.getElementById('trb-stamp').classList.remove('show');
+  await wait(200);
+  for(const id of['ci1','ci2','ci3','ci4']){
+    await wait(480);const el=document.getElementById(id);el.classList.add('show');
+    await wait(180);el.classList.add('checked');
+  }
+  await wait(500);document.getElementById('trb-stamp').classList.add('show');
+}
+
+function countUp(id,from,to,dur,fmt){
+  const el=document.getElementById(id);if(!el)return;
+  const start=performance.now();
+  function tick(now){const t=Math.min((now-start)/dur,1);el.textContent=fmt(Math.round(from+(to-from)*easeOut(t)));if(t<1)requestAnimationFrame(tick);}
+  requestAnimationFrame(tick);
+}
+function easeOut(t){return 1-Math.pow(1-t,3);}
+
+// Init
+updateUI();
+
+function copyLink(btn){
+  var url = 'https://hasnaaeddarif.github.io/payment-service-demo/';
+  try{
+    navigator.clipboard.writeText(url).then(function(){
+      btn.textContent='✅ Copied!';
+      btn.classList.add('copied');
+      setTimeout(function(){btn.textContent='🔗 Copy Link';btn.classList.remove('copied');},2000);
+    });
+  } catch(e){
+    // fallback for older browsers
+    var ta=document.createElement('textarea');
+    ta.value=url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent='✅ Copied!';
+    setTimeout(function(){btn.textContent='🔗 Copy Link';},2000);
+  }
+}
+
+function goFullscreen(){
+  var el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
+}
+
+function openTF(e){
+  if(e){e.preventDefault();}
+  var url='https://quality-guard-payment-857138853031.us-central1.run.app/';
+  try{ window.open(url,'_blank','noopener,noreferrer'); }
+  catch(err){ try{ window.top.location.href=url; }catch(e2){ window.location.href=url; } }
+}
+</script>
+
+<!-- ═══════════════════════════════════════════
+  EMBED CODE — paste this wherever you need it:
+
+  <iframe
+    src="quality-guard-equiti-publish.html"
+    title="Quality Guard – Continuous Release Readiness"
+    width="100%"
+    style="aspect-ratio:16/9;border:none;border-radius:12px;display:block;"
+    loading="lazy"
+    allowfullscreen>
+  </iframe>
+
+  Host the HTML file on your intranet and update
+  the src path to wherever you've saved it.
+═══════════════════════════════════════════ -->
+
+</body>
+</html>
